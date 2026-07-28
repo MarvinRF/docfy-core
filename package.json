@@ -1,0 +1,31 @@
+{
+  "name": "docfy-core",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Pure OpenAPI document-model + Copy-for-AI transformer shared by docfy-ui and docfy-mcp",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@apidevtools/swagger-parser": "^12.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.16.5",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.9"
+  }
+}
