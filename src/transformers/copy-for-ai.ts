@@ -1,11 +1,11 @@
-import type { Endpoint, JSONSchemaLike, ParameterInfo } from '../document-model/types';
+import type { Endpoint, JSONSchemaLike, ParameterInfo } from '../document-model/types.js';
 import {
   STATUS_TEXT,
   buildSchemaExample,
   pickPrimarySuccessResponse,
   resolveUnion,
   withUnionNotes,
-} from '../document-model/example';
+} from '../document-model/example.js';
 
 function truncateToSentences(text: string, maxSentences: number): string {
   const sentences = text.trim().split(/(?<=[.!?])\s+/).filter(Boolean);

@@ -6,7 +6,7 @@ import type {
   RequestBodyInfo,
   ResponseInfo,
   TagGroup,
-} from './types';
+} from './types.js';
 
 const HTTP_METHODS = ['get', 'put', 'post', 'delete', 'options', 'head', 'patch', 'trace'] as const;
 const DEFAULT_TAG = 'Default';

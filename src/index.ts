@@ -1,4 +1,4 @@
-export { normalizeDocument } from './document-model/normalize';
+export { normalizeDocument } from './document-model/normalize.js';
 export {
   STATUS_TEXT,
   buildSchemaExample,
@@ -6,11 +6,11 @@ export {
   pickPrimarySuccessResponse,
   resolveUnion,
   withUnionNotes,
-} from './document-model/example';
-export type { SchemaExampleResult } from './document-model/example';
-export { capDepth } from './document-model/cap-depth';
-export type { CapDepthOptions } from './document-model/cap-depth';
-export { operationToAiText } from './transformers/copy-for-ai';
+} from './document-model/example.js';
+export type { SchemaExampleResult } from './document-model/example.js';
+export { capDepth } from './document-model/cap-depth.js';
+export type { CapDepthOptions } from './document-model/cap-depth.js';
+export { operationToAiText } from './transformers/copy-for-ai.js';
 export type {
   DocumentModel,
   Endpoint,

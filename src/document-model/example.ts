@@ -1,5 +1,5 @@
-import type { JSONSchemaLike, ResponseInfo } from './types';
-import { capDepth } from './cap-depth';
+import type { JSONSchemaLike, ResponseInfo } from './types.js';
+import { capDepth } from './cap-depth.js';
 
 export const STATUS_TEXT: Record<string, string> = {
   '400': 'Bad Request',
