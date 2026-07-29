@@ -14,6 +14,12 @@
   "files": [
     "dist"
   ],
+  "author": "Marvin Rocha",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MarvinRF/docfy-core.git"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
