@@ -1,6 +1,6 @@
 {
   "name": "docfy-core",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "description": "Pure OpenAPI document-model + Copy-for-AI transformer shared by docfy-ui and docfy-mcp",
   "main": "./dist/index.js",
@@ -18,7 +18,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/MarvinRF/docfy-core.git"
+    "url": "git+https://github.com/MarvinRF/docfy-core.git"
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",

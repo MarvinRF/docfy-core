@@ -13,6 +13,7 @@ function baseEndpoint(overrides: Partial<Endpoint> = {}): Endpoint {
     parameters: [],
     requestBody: undefined,
     responses: [],
+    security: [],
     ...overrides,
   };
 }

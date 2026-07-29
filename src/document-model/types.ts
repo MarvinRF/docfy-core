@@ -34,12 +34,28 @@ export interface Endpoint {
   parameters: ParameterInfo[];
   requestBody: RequestBodyInfo | undefined;
   responses: ResponseInfo[];
+  /** OpenAPI `security` resolved for this operation (operation-level overrides global,
+   * including an explicit `[]` meaning "no auth"). Each entry is an OR alternative;
+   * within an entry, every scheme name must be satisfied (AND). */
+  security: Record<string, string[]>[];
 }
 
 export interface TagGroup {
   name: string;
   description: string | undefined;
   endpoints: Endpoint[];
+}
+
+export interface SecuritySchemeInfo {
+  type: 'apiKey' | 'http' | 'oauth2' | 'openIdConnect';
+  /** `http` only: 'bearer' | 'basic' | ... */
+  scheme: string | undefined;
+  bearerFormat: string | undefined;
+  /** `apiKey` only: where the key is sent. */
+  in: 'query' | 'header' | 'cookie' | undefined;
+  /** `apiKey` only: header/query/cookie name to send it under. */
+  name: string | undefined;
+  description: string | undefined;
 }
 
 export interface DocumentModel {
@@ -52,4 +68,7 @@ export interface DocumentModel {
    * tags used by operations but not declared, in first-appearance order.
    * Operations with no tags fall into a synthetic "Default" group, last. */
   tagGroups: TagGroup[];
+  securitySchemes: Record<string, SecuritySchemeInfo>;
+  /** Absolute server URLs declared in the OpenAPI `servers[]` array, in order. Relative entries are dropped. */
+  servers: string[];
 }

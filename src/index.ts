@@ -18,5 +18,6 @@ export type {
   ParameterInfo,
   RequestBodyInfo,
   ResponseInfo,
+  SecuritySchemeInfo,
   TagGroup,
 } from './document-model/types';

@@ -146,4 +146,114 @@ describe('normalizeDocument()', () => {
     const model = await normalizeDocument(spec);
     expect(model.tagGroups.map((g) => g.name)).toEqual(['used']);
   });
+
+  it('extracts securitySchemes from components', async () => {
+    const spec = {
+      openapi: '3.0.3',
+      info: { title: 'Security test', version: '1.0.0' },
+      components: {
+        securitySchemes: {
+          bearerAuth: { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
+          apiKeyAuth: { type: 'apiKey', in: 'header', name: 'X-API-Key' },
+        },
+      },
+      paths: {
+        '/a': { get: { tags: ['x'], responses: { '200': { description: 'OK' } } } },
+      },
+    };
+
+    const model = await normalizeDocument(spec);
+    expect(model.securitySchemes).toEqual({
+      bearerAuth: { type: 'http', scheme: 'bearer', bearerFormat: 'JWT', in: undefined, name: undefined, description: undefined },
+      apiKeyAuth: { type: 'apiKey', scheme: undefined, bearerFormat: undefined, in: 'header', name: 'X-API-Key', description: undefined },
+    });
+  });
+
+  it('defaults securitySchemes to an empty object when components are absent', async () => {
+    const spec = {
+      openapi: '3.0.3',
+      info: { title: 'No security test', version: '1.0.0' },
+      paths: { '/a': { get: { tags: ['x'], responses: { '200': { description: 'OK' } } } } },
+    };
+
+    const model = await normalizeDocument(spec);
+    expect(model.securitySchemes).toEqual({});
+  });
+
+  it('falls back to global security when the operation does not declare its own', async () => {
+    const spec = {
+      openapi: '3.0.3',
+      info: { title: 'Global security test', version: '1.0.0' },
+      security: [{ bearerAuth: [] }],
+      paths: { '/a': { get: { tags: ['x'], responses: { '200': { description: 'OK' } } } } },
+    };
+
+    const model = await normalizeDocument(spec);
+    expect(model.tagGroups[0].endpoints[0].security).toEqual([{ bearerAuth: [] }]);
+  });
+
+  it('lets an operation override global security, including with an explicit empty array', async () => {
+    const spec = {
+      openapi: '3.0.3',
+      info: { title: 'Override security test', version: '1.0.0' },
+      security: [{ bearerAuth: [] }],
+      paths: {
+        '/public': { get: { tags: ['x'], security: [], responses: { '200': { description: 'OK' } } } },
+        '/scoped': {
+          get: { tags: ['x'], security: [{ apiKeyAuth: [] }], responses: { '200': { description: 'OK' } } },
+        },
+      },
+    };
+
+    const model = await normalizeDocument(spec);
+    const [pub, scoped] = model.tagGroups[0].endpoints;
+    expect(pub.security).toEqual([]);
+    expect(scoped.security).toEqual([{ apiKeyAuth: [] }]);
+  });
+
+  it('extracts absolute server URLs, in declared order', async () => {
+    const spec = {
+      openapi: '3.0.3',
+      info: { title: 'Servers test', version: '1.0.0' },
+      servers: [{ url: 'https://api.example.com' }, { url: 'https://staging.example.com' }],
+      paths: { '/a': { get: { tags: ['x'], responses: { '200': { description: 'OK' } } } } },
+    };
+
+    const model = await normalizeDocument(spec);
+    expect(model.servers).toEqual(['https://api.example.com', 'https://staging.example.com']);
+  });
+
+  it('drops relative server entries (no safe base to resolve them against)', async () => {
+    const spec = {
+      openapi: '3.0.3',
+      info: { title: 'Relative servers test', version: '1.0.0' },
+      servers: [{ url: '/' }, { url: 'https://api.example.com' }],
+      paths: { '/a': { get: { tags: ['x'], responses: { '200': { description: 'OK' } } } } },
+    };
+
+    const model = await normalizeDocument(spec);
+    expect(model.servers).toEqual(['https://api.example.com']);
+  });
+
+  it('defaults servers to an empty array when absent', async () => {
+    const spec = {
+      openapi: '3.0.3',
+      info: { title: 'No servers test', version: '1.0.0' },
+      paths: { '/a': { get: { tags: ['x'], responses: { '200': { description: 'OK' } } } } },
+    };
+
+    const model = await normalizeDocument(spec);
+    expect(model.servers).toEqual([]);
+  });
+
+  it('defaults an endpoint to no security requirements when neither operation nor global declares any', async () => {
+    const spec = {
+      openapi: '3.0.3',
+      info: { title: 'No security at all test', version: '1.0.0' },
+      paths: { '/a': { get: { tags: ['x'], responses: { '200': { description: 'OK' } } } } },
+    };
+
+    const model = await normalizeDocument(spec);
+    expect(model.tagGroups[0].endpoints[0].security).toEqual([]);
+  });
 });

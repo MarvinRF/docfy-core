@@ -5,6 +5,7 @@ import type {
   ParameterInfo,
   RequestBodyInfo,
   ResponseInfo,
+  SecuritySchemeInfo,
   TagGroup,
 } from './types.js';
 
@@ -44,6 +45,41 @@ function buildRequestBody(rawRequestBody: any | undefined): RequestBodyInfo | un
     contentType: picked.contentType,
     schema: picked.schema,
   };
+}
+
+function buildSecuritySchemes(raw: Record<string, any> | undefined): Record<string, SecuritySchemeInfo> {
+  if (!raw) return {};
+  const result: Record<string, SecuritySchemeInfo> = {};
+  for (const [name, scheme] of Object.entries(raw)) {
+    result[name] = {
+      type: scheme?.type,
+      scheme: scheme?.scheme,
+      bearerFormat: scheme?.bearerFormat,
+      in: scheme?.in,
+      name: scheme?.name,
+      description: scheme?.description,
+    };
+  }
+  return result;
+}
+
+/** Absolute server URLs only — relative entries (e.g. `/`) have no safe base to resolve against here. */
+function buildServers(raw: { url: string }[] | undefined): string[] {
+  if (!raw) return [];
+  return raw
+    .map((s) => s.url)
+    .filter((url) => {
+      try {
+        return Boolean(new URL(url).origin);
+      } catch {
+        return false;
+      }
+    });
+}
+
+/** Operation-level `security` overrides global, including an explicit `[]` meaning "no auth". */
+function resolveSecurity(operation: Record<string, any>, spec: RawSpec): Record<string, string[]>[] {
+  return operation.security ?? spec.security ?? [];
 }
 
 function buildResponses(rawResponses: Record<string, any> | undefined): ResponseInfo[] {
@@ -137,6 +173,7 @@ export async function normalizeDocument(rawSpec: unknown): Promise<DocumentModel
         parameters: buildParameters(operation.parameters),
         requestBody: buildRequestBody(operation.requestBody),
         responses: buildResponses(operation.responses),
+        security: resolveSecurity(operation, spec),
       };
 
       for (const tag of tags) {
@@ -161,5 +198,7 @@ export async function normalizeDocument(rawSpec: unknown): Promise<DocumentModel
       description: spec.info?.description,
     },
     tagGroups,
+    securitySchemes: buildSecuritySchemes(spec.components?.securitySchemes),
+    servers: buildServers(spec.servers),
   };
 }
