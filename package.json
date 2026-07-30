@@ -1,6 +1,6 @@
 {
   "name": "docfy-core",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "type": "module",
   "description": "Pure OpenAPI document-model + Copy-for-AI transformer shared by docfy-ui and docfy-mcp",
   "main": "./dist/index.js",
