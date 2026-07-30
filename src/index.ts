@@ -21,3 +21,5 @@ export type {
   SecuritySchemeInfo,
   TagGroup,
 } from './document-model/types';
+export { diffDocuments } from './document-model/diff.js';
+export type { ChangeSeverity, ChangedEndpoint, FieldChange, SpecDiff } from './document-model/diff.js';
