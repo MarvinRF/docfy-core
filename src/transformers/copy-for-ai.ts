@@ -8,7 +8,10 @@ import {
 } from '../document-model/example.js';
 
 function truncateToSentences(text: string, maxSentences: number): string {
-  const sentences = text.trim().split(/(?<=[.!?])\s+/).filter(Boolean);
+  const sentences = text
+    .trim()
+    .split(/(?<=[.!?])\s+/)
+    .filter(Boolean);
   return sentences.slice(0, maxSentences).join(' ');
 }
 
@@ -145,7 +148,7 @@ export function operationToAiText(endpoint: Endpoint): string {
   const success = pickPrimarySuccessResponse(endpoint.responses);
   if (success) {
     const result = buildSchemaExample(success.schema);
-    const body = result ? withUnionNotes(result.json, result.unionSizes) : (success.description || 'No content');
+    const body = result ? withUnionNotes(result.json, result.unionSizes) : success.description || 'No content';
     sections.push(`Success Response (${success.status}):\n${body}`);
   }
 

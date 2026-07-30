@@ -15,7 +15,9 @@ const JSON_CONTENT_TYPE_PREFERENCE = ['application/json'];
 
 type RawSpec = Record<string, any>;
 
-function pickContent(content: Record<string, any> | undefined): { contentType: string; schema: Record<string, unknown> | undefined } | undefined {
+function pickContent(
+  content: Record<string, any> | undefined,
+): { contentType: string; schema: Record<string, unknown> | undefined } | undefined {
   if (!content) return undefined;
   const keys = Object.keys(content);
   if (keys.length === 0) return undefined;

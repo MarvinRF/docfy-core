@@ -99,9 +99,7 @@ describe('operationToAiText()', () => {
   it('omits Request for a GET with no requestBody, but keeps Parameters', () => {
     const endpoint = baseEndpoint({
       method: 'GET',
-      parameters: [
-        { name: 'id', in: 'path', required: true, schema: { type: 'string' }, description: undefined },
-      ],
+      parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' }, description: undefined }],
     });
     const text = operationToAiText(endpoint);
     expect(text).not.toContain('Request:');
@@ -309,7 +307,14 @@ describe('operationToAiText()', () => {
       const endpoint = baseEndpoint({
         method: 'GET',
         path: '/users',
-        responses: [{ status: '200', description: 'Users found successfully', contentType: 'application/json', schema: makeRecursiveUserResponse() as never }],
+        responses: [
+          {
+            status: '200',
+            description: 'Users found successfully',
+            contentType: 'application/json',
+            schema: makeRecursiveUserResponse() as never,
+          },
+        ],
       });
 
       const text = operationToAiText(endpoint);
@@ -323,7 +328,11 @@ describe('operationToAiText()', () => {
     it('does not duplicate validation rules for fields repeated across the (now-collapsed) cycle', () => {
       const endpoint = baseEndpoint({
         method: 'POST',
-        requestBody: { required: true, contentType: 'application/json', schema: makeRecursiveUserResponse().properties.data.items as never },
+        requestBody: {
+          required: true,
+          contentType: 'application/json',
+          schema: makeRecursiveUserResponse().properties.data.items as never,
+        },
       });
 
       const text = operationToAiText(endpoint);
@@ -333,7 +342,14 @@ describe('operationToAiText()', () => {
     it('stays well under 5ms even for a circular schema (no quadratic blowup from the fix)', () => {
       const endpoint = baseEndpoint({
         method: 'GET',
-        responses: [{ status: '200', description: 'OK', contentType: 'application/json', schema: makeRecursiveUserResponse() as never }],
+        responses: [
+          {
+            status: '200',
+            description: 'OK',
+            contentType: 'application/json',
+            schema: makeRecursiveUserResponse() as never,
+          },
+        ],
       });
 
       const start = performance.now();
@@ -351,7 +367,9 @@ describe('operationToAiText()', () => {
         contentType: 'application/json',
         schema: { type: 'object', properties: { name: { type: 'string', minLength: 1 } } },
       },
-      responses: [{ status: '201', description: 'Created', contentType: undefined, schema: { type: 'object', properties: {} } }],
+      responses: [
+        { status: '201', description: 'Created', contentType: undefined, schema: { type: 'object', properties: {} } },
+      ],
     });
 
     const start = performance.now();

@@ -86,7 +86,10 @@ describe('capDepth()', () => {
     };
 
     const result = capDepth(deepSchema) as any;
-    expect(result.responses[0].schema.properties.data.items).toEqual({ type: 'object', properties: { id: { type: 'string' } } });
+    expect(result.responses[0].schema.properties.data.items).toEqual({
+      type: 'object',
+      properties: { id: { type: 'string' } },
+    });
     expect(result.responses[0].schema.properties.meta.required).toEqual(['page']);
   });
 

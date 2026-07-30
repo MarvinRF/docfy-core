@@ -164,8 +164,22 @@ describe('normalizeDocument()', () => {
 
     const model = await normalizeDocument(spec);
     expect(model.securitySchemes).toEqual({
-      bearerAuth: { type: 'http', scheme: 'bearer', bearerFormat: 'JWT', in: undefined, name: undefined, description: undefined },
-      apiKeyAuth: { type: 'apiKey', scheme: undefined, bearerFormat: undefined, in: 'header', name: 'X-API-Key', description: undefined },
+      bearerAuth: {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        in: undefined,
+        name: undefined,
+        description: undefined,
+      },
+      apiKeyAuth: {
+        type: 'apiKey',
+        scheme: undefined,
+        bearerFormat: undefined,
+        in: 'header',
+        name: 'X-API-Key',
+        description: undefined,
+      },
     });
   });
 

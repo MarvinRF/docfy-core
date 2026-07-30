@@ -1,5 +1,11 @@
 import { describe, it, expect } from 'vitest';
-import { buildSchemaExample, circularMarker, pickPrimarySuccessResponse, resolveUnion, withUnionNotes } from './example';
+import {
+  buildSchemaExample,
+  circularMarker,
+  pickPrimarySuccessResponse,
+  resolveUnion,
+  withUnionNotes,
+} from './example';
 import type { JSONSchemaLike } from './types';
 
 describe('resolveUnion()', () => {
@@ -92,7 +98,10 @@ describe('buildSchemaExample()', () => {
 
   it('reports union sizes for oneOf/anyOf encountered', () => {
     const result = buildSchemaExample({
-      oneOf: [{ type: 'object', properties: { a: { type: 'string' } } }, { type: 'object', properties: { b: { type: 'string' } } }],
+      oneOf: [
+        { type: 'object', properties: { a: { type: 'string' } } },
+        { type: 'object', properties: { b: { type: 'string' } } },
+      ],
     });
     expect(result?.unionSizes).toEqual([2]);
   });
@@ -110,7 +119,6 @@ describe('buildSchemaExample()', () => {
       const result = buildSchemaExample(user);
       expect(result?.example).toEqual({ id: 'string', manager: '(circular reference)' });
     });
-
 
     it('replaces a direct self-reference with a single circular marker, not repeated nesting', () => {
       const user: JSONSchemaLike = { type: 'object', properties: { id: { type: 'string' } } };

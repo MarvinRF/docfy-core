@@ -124,7 +124,9 @@ describe('diffDocuments()', () => {
   });
 
   it('flags a request body becoming required as breaking', async () => {
-    const noBody = { post: { operationId: 'createUser', tags: ['users'], responses: { '201': { description: 'Created' } } } };
+    const noBody = {
+      post: { operationId: 'createUser', tags: ['users'], responses: { '201': { description: 'Created' } } },
+    };
     const requiredBody = {
       post: {
         operationId: 'createUser',
@@ -166,7 +168,10 @@ describe('diffDocuments()', () => {
 
   it('flags a new response status as info', async () => {
     const withExtra = {
-      get: { ...baseGetUsers.get, responses: { ...baseGetUsers.get.responses, '500': { description: 'Server Error' } } },
+      get: {
+        ...baseGetUsers.get,
+        responses: { ...baseGetUsers.get.responses, '500': { description: 'Server Error' } },
+      },
     };
     const { oldModel, newModel } = await models({ '/users': baseGetUsers }, { '/users': withExtra });
     const diff = diffDocuments(oldModel, newModel);

@@ -66,10 +66,7 @@
           "email": { "type": "string", "format": "email" },
           "password": { "type": "string", "minLength": 8 },
           "role": {
-            "oneOf": [
-              { "$ref": "#/components/schemas/AdminRole" },
-              { "$ref": "#/components/schemas/MemberRole" }
-            ]
+            "oneOf": [{ "$ref": "#/components/schemas/AdminRole" }, { "$ref": "#/components/schemas/MemberRole" }]
           }
         },
         "required": ["name", "email", "password"]

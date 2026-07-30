@@ -45,7 +45,9 @@ function mergeAllOf(schema: JSONSchemaLike): JSONSchemaLike {
   const merged: JSONSchemaLike = { ...schema };
   mergeCache.set(schema, merged);
   delete (merged as Record<string, unknown>).allOf;
-  let properties: Record<string, JSONSchemaLike> = { ...(merged.properties as Record<string, JSONSchemaLike> | undefined) };
+  let properties: Record<string, JSONSchemaLike> = {
+    ...(merged.properties as Record<string, JSONSchemaLike> | undefined),
+  };
   let required: string[] = [...((merged.required as string[] | undefined) ?? [])];
 
   for (const branch of branches) {
@@ -69,7 +71,10 @@ function mergeAllOf(schema: JSONSchemaLike): JSONSchemaLike {
 }
 
 /** Resolves `allOf`/`oneOf`/`anyOf` to a single concrete schema. Returns the variant count when a `oneOf`/`anyOf` union was found. */
-export function resolveUnion(schema: JSONSchemaLike | undefined): { schema: JSONSchemaLike | undefined; unionSize?: number } {
+export function resolveUnion(schema: JSONSchemaLike | undefined): {
+  schema: JSONSchemaLike | undefined;
+  unionSize?: number;
+} {
   if (!schema) return { schema: undefined };
   const flattened = mergeAllOf(schema);
   const union = (flattened.oneOf as JSONSchemaLike[] | undefined) ?? (flattened.anyOf as JSONSchemaLike[] | undefined);
@@ -125,7 +130,7 @@ function flattenSchema(
   if (ancestors.has(resolved)) return circularMarker(resolved);
 
   const rawType = resolved.type;
-  const type = Array.isArray(rawType) ? (rawType as string[]).find((t) => t !== 'null') ?? rawType[0] : rawType;
+  const type = Array.isArray(rawType) ? ((rawType as string[]).find((t) => t !== 'null') ?? rawType[0]) : rawType;
 
   if (type === 'object' || resolved.properties) {
     const props = (resolved.properties as Record<string, JSONSchemaLike>) ?? {};
