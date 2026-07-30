@@ -23,3 +23,7 @@ export type {
 } from './document-model/types';
 export { diffDocuments } from './document-model/diff.js';
 export type { ChangeSeverity, ChangedEndpoint, FieldChange, SpecDiff } from './document-model/diff.js';
+export { validateAgainstSchema } from './document-model/validate-response.js';
+export type { SchemaMismatch } from './document-model/validate-response.js';
+export { buildLlmsTxt, buildLlmsFullTxt } from './document-model/llms-txt.js';
+export type { LlmsTxtOptions } from './document-model/llms-txt.js';

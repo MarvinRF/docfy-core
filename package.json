@@ -3,11 +3,12 @@
   "version": "0.3.0",
   "type": "module",
   "description": "Pure OpenAPI document-model + Copy-for-AI transformer shared by docfy-ui and docfy-mcp",
-  "main": "./dist/index.js",
+  "main": "./dist/cjs/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
+      "require": "./dist/cjs/index.js",
       "import": "./dist/index.js"
     }
   },
@@ -25,7 +26,7 @@
     "url": "https://github.com/MarvinRF/docfy-core/issues"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.build.json",
+    "build": "tsc -p tsconfig.build.json && tsc -p tsconfig.build.cjs.json && echo '{\"type\":\"commonjs\"}' > dist/cjs/package.json",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
