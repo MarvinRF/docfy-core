@@ -1,10 +1,17 @@
 # docfy-core
 
-Document Model puro (normalização de spec OpenAPI + gerador de exemplos +
-transformer "Copy for AI") extraído do `docfy-ui`, sem dependências de
-React/DOM. Consumido por `docfy-ui` e `docfy-mcp`.
+Pure OpenAPI document model — spec normalization, example generator, and
+the "Copy for AI" transformer — extracted from `docfy-ui`, with no
+React/DOM dependencies. Consumed by [`docfy-ui`](../docfy-ui) and
+[`docfy-mcp`](../docfy-mcp).
 
-## API
+## Install
+
+```bash
+npm install docfy-core
+```
+
+## Usage
 
 ```ts
 import { normalizeDocument, operationToAiText } from 'docfy-core';
@@ -16,6 +23,6 @@ const aiText = operationToAiText(endpoint);
 
 ## Scripts
 
-- `npm run build` — compila para `dist/` (tipos + JS)
-- `npm test` — roda a suíte (vitest)
+- `npm run build` — compiles to `dist/` (types + JS)
+- `npm test` — runs the test suite (vitest)
 - `npm run typecheck` — `tsc --noEmit`
