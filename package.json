@@ -20,17 +20,26 @@
     "type": "git",
     "url": "git+https://github.com/MarvinRF/docfy-core.git"
   },
+  "homepage": "https://github.com/MarvinRF/docfy-core#readme",
+  "bugs": {
+    "url": "https://github.com/MarvinRF/docfy-core/issues"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "prepublishOnly": "npm run build",
+    "release": "semantic-release"
   },
   "dependencies": {
     "@apidevtools/swagger-parser": "^12.1.0"
   },
   "devDependencies": {
+    "@semantic-release/changelog": "^7.0.0",
+    "@semantic-release/git": "^11.0.1",
     "@types/node": "^22.16.5",
+    "semantic-release": "^25.0.8",
     "typescript": "^5.9.3",
     "vitest": "^4.1.9"
   }
