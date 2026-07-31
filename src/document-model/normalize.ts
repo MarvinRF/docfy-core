@@ -10,7 +10,10 @@ import type {
 } from './types.js';
 
 const HTTP_METHODS = ['get', 'put', 'post', 'delete', 'options', 'head', 'patch', 'trace'] as const;
-const DEFAULT_TAG = 'Default';
+
+/** Synthetic tag name assigned to an operation with no `tags` declared — exported so callers
+ * (e.g. `lintSpec()`) can tell "genuinely untagged" apart from "actually tagged 'Default'". */
+export const DEFAULT_TAG = 'Default';
 const JSON_CONTENT_TYPE_PREFERENCE = ['application/json'];
 
 type RawSpec = Record<string, any>;

@@ -28,3 +28,5 @@ export type { SchemaMismatch } from './document-model/validate-response.js';
 export { buildLlmsTxt, buildLlmsFullTxt } from './document-model/llms-txt.js';
 export type { LlmsTxtOptions } from './document-model/llms-txt.js';
 export { uniqueEndpoints } from './document-model/unique-endpoints.js';
+export { lintSpec } from './document-model/lint-spec.js';
+export type { SpecLintIssue, SpecLintRule } from './document-model/lint-spec.js';
