@@ -1,3 +1,10 @@
+# [0.4.0](https://github.com/MarvinRF/docfy-core/compare/v0.3.0...v0.4.0) (2026-07-31)
+
+
+### Features
+
+* add validateAgainstSchema() and llms.txt/llms-full.txt serializers ([b4fb63f](https://github.com/MarvinRF/docfy-core/commit/b4fb63fa7c2b78e6e97ba4f694341754b94cbbf4))
+
 # [0.3.0](https://github.com/MarvinRF/docfy-core/compare/v0.2.0...v0.3.0) (2026-07-30)
 
 
