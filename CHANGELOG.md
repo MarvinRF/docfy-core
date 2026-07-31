@@ -1,3 +1,10 @@
+# [0.5.0](https://github.com/MarvinRF/docfy-core/compare/v0.4.0...v0.5.0) (2026-07-31)
+
+
+### Features
+
+* add lintSpec() — OpenAPI spec quality governance checks ([0e4d5b1](https://github.com/MarvinRF/docfy-core/commit/0e4d5b188b282578f42a686863b3355d5005dcb4))
+
 # [0.4.0](https://github.com/MarvinRF/docfy-core/compare/v0.3.0...v0.4.0) (2026-07-31)
 
 
