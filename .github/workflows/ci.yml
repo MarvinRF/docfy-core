@@ -21,6 +21,12 @@ jobs:
 
       - run: npm ci
 
+      # devDependencies (semantic-release/tar/brace-expansion chain) are
+      # excluded — those never ship in the published package. Blocking here
+      # because this package's production dependencies are clean today.
+      - name: npm audit (production dependencies only)
+        run: npm audit --omit=dev --audit-level=high
+
       - name: Lint
         run: npm run lint
 
