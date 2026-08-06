@@ -1,3 +1,10 @@
+# [0.6.0](https://github.com/MarvinRF/docfy-core/compare/v0.5.0...v0.6.0) (2026-08-06)
+
+
+### Features
+
+* add runContractTests() and allowed-origins helpers ([4908453](https://github.com/MarvinRF/docfy-core/commit/49084532a11e3121370e1941f5912fde395beab8))
+
 # [0.5.0](https://github.com/MarvinRF/docfy-core/compare/v0.4.0...v0.5.0) (2026-07-31)
 
 
