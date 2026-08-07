@@ -1,3 +1,11 @@
+## [0.6.1](https://github.com/MarvinRF/docfy-core/compare/v0.6.0...v0.6.1) (2026-08-07)
+
+
+### Bug Fixes
+
+* **deps:** bump fast-uri and js-yaml, 2 high-severity CVEs ([c0a274a](https://github.com/MarvinRF/docfy-core/commit/c0a274a598dc838674ff116430a6e6a23366fe74)), closes [hi#severity](https://github.com/hi/issues/severity)
+* SECURITY.md formatting ([89b68da](https://github.com/MarvinRF/docfy-core/commit/89b68da1c5079bf0b99b041fddfa6f6a77ba176e))
+
 # [0.6.0](https://github.com/MarvinRF/docfy-core/compare/v0.5.0...v0.6.0) (2026-08-06)
 
 
