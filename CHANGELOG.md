@@ -1,3 +1,21 @@
+# [0.7.0](https://github.com/MarvinRF/docfy-core/compare/v0.6.2...v0.7.0) (2026-11-18)
+
+
+### Features
+
+* **contract-test:** fire only safe methods and restrict baseUrl by default ([68f00f4](https://github.com/MarvinRF/docfy-core/commit/68f00f4fd8f35ca13fe1269900743cffbdfd3246))
+
+
+### BREAKING CHANGES
+
+* **contract-test:** runContractTests no longer fires POST/PUT/PATCH/DELETE
+by default; pass allowWrites: true to restore it. A non-loopback baseUrl
+outside the spec's servers now throws unless restrictToServers: false.
+EndpointTestOutcome gains the skipped-unsafe-method variant. Node.js
+22.12+ is required.
+
+157 tests passing.
+
 ## [0.6.2](https://github.com/MarvinRF/docfy-core/compare/v0.6.1...v0.6.2) (2026-11-18)
 
 
