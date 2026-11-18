@@ -1,3 +1,10 @@
+## [0.6.2](https://github.com/MarvinRF/docfy-core/compare/v0.6.1...v0.6.2) (2026-11-18)
+
+
+### Bug Fixes
+
+* **deps:** refresh lockfile for fast-uri and js-yaml advisories ([c985627](https://github.com/MarvinRF/docfy-core/commit/c985627768dd5fce7a1fbc5c01fd4ff31fb3aef7)), closes [hi#severity](https://github.com/hi/issues/severity)
+
 ## [0.6.1](https://github.com/MarvinRF/docfy-core/compare/v0.6.0...v0.6.1) (2026-08-07)
 
 
