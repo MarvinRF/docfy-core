@@ -114,7 +114,7 @@ describe('runContractTests()', () => {
         res.end();
       },
       async (baseUrl) => {
-        const [result] = await runContractTests(document, { baseUrl });
+        const [result] = await runContractTests(document, { baseUrl, allowWrites: true });
         expect(result.outcome).toEqual({ kind: 'no-schema', httpStatus: 204 });
       },
     );
@@ -196,7 +196,7 @@ describe('runContractTests()', () => {
     );
   });
 
-  it('sends the generated request body on a POST endpoint', async () => {
+  it('sends the generated request body on a POST endpoint when allowWrites is set', async () => {
     const document = await normalized({
       '/users': {
         post: {
@@ -221,7 +221,7 @@ describe('runContractTests()', () => {
         });
       },
       async (baseUrl) => {
-        await runContractTests(document, { baseUrl });
+        await runContractTests(document, { baseUrl, allowWrites: true });
         expect(JSON.parse(capturedBody)).toEqual({ name: 'string' });
       },
     );
@@ -295,7 +295,49 @@ describe('runContractTests()', () => {
     ).rejects.toThrow("is not one of the spec's declared servers");
   });
 
-  it('restrictToServers does not restrict anything when omitted', async () => {
+  it('skips non-safe methods without firing them when allowWrites is not set', async () => {
+    const document = await normalized({
+      '/users': {
+        get: { tags: ['Users'], responses: { '200': { description: 'OK' } } },
+        delete: { tags: ['Users'], responses: { '204': { description: 'Deleted' } } },
+      },
+    });
+
+    const methodsSeen: string[] = [];
+    await withServer(
+      (req, res) => {
+        methodsSeen.push(req.method ?? '');
+        res.statusCode = 200;
+        res.end();
+      },
+      async (baseUrl) => {
+        const results = await runContractTests(document, { baseUrl });
+        expect(results.find((r) => r.method === 'DELETE')?.outcome).toEqual({ kind: 'skipped-unsafe-method' });
+        expect(methodsSeen).toEqual(['GET']);
+      },
+    );
+  });
+
+  it('by default rejects a non-loopback baseUrl outside the declared servers', async () => {
+    const document = await normalized({
+      '/users': { get: { tags: ['Users'], responses: { '200': { description: 'OK' } } } },
+    });
+
+    await expect(runContractTests(document, { baseUrl: 'https://prod.example.com' })).rejects.toThrow(
+      "is not one of the spec's declared servers",
+    );
+  });
+
+  it('restrictToServers: false accepts any baseUrl', async () => {
+    const document = await normalized({
+      '/users': { get: { tags: ['Users'], responses: { '200': { description: 'OK' } } } },
+    });
+
+    const results = await runContractTests(document, { baseUrl: 'http://192.0.2.1:1', restrictToServers: false });
+    expect(results[0].outcome.kind).toBe('request-failed');
+  }, 15_000);
+
+  it('by default exempts a loopback baseUrl from the servers check', async () => {
     const document = await normalized({
       '/users': { get: { tags: ['Users'], responses: { '200': { description: 'OK' } } } },
     });

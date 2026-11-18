@@ -6,6 +6,8 @@ import type { SchemaMismatch } from '../document-model/validate-response.js';
 import { buildAllowedOrigins, isOriginAllowed } from './allowed-origins.js';
 
 const METHODS_WITH_BODY = new Set(['POST', 'PUT', 'PATCH', 'DELETE']);
+/** Methods that never change server state (RFC 9110 §9.2.1) — the only ones fired unless `allowWrites` is set. */
+const SAFE_METHODS = new Set(['GET', 'HEAD', 'OPTIONS']);
 
 /** A live response is read into memory in full to validate against the schema, so an unbounded body is a real DoS surface. */
 const MAX_BODY_BYTES = 10 * 1024 * 1024; // 10MB
@@ -18,7 +20,9 @@ export type EndpointTestOutcome =
   | { kind: 'no-schema'; httpStatus: number }
   | { kind: 'unparseable-body'; httpStatus: number }
   | { kind: 'response-too-large'; httpStatus: number }
-  | { kind: 'request-failed'; message: string };
+  | { kind: 'request-failed'; message: string }
+  /** Not fired: the method can change server state and `allowWrites` was not set. */
+  | { kind: 'skipped-unsafe-method' };
 
 export interface EndpointTestResult {
   method: string;
@@ -32,8 +36,30 @@ export interface RunContractTestsOptions {
   headers?: Record<string, string>;
   /** Case-insensitive substring match against path/tags — same filter semantics as `list_endpoints`. */
   filter?: string;
-  /** When true, `baseUrl` must match one of `document.servers`'s origins, or the run is rejected before firing any request. Opt-in — off by default so pointing at a plain local server keeps working with zero extra config. */
+  /**
+   * `baseUrl` must match one of `document.servers`'s origins, or the run is rejected before
+   * firing any request. Omitted (the default): enforced, except for a loopback `baseUrl`
+   * (`localhost`, `127.0.0.0/8`, `::1`) so a local dev server needs no config. `true`: enforced
+   * even for loopback. `false`: disabled — any `baseUrl` is accepted.
+   */
   restrictToServers?: boolean;
+  /**
+   * Also fire POST/PUT/PATCH/DELETE (and any other non-safe method). Off by default: these
+   * requests carry generated bodies and placeholder IDs and can create, modify or delete real
+   * data on whatever server `baseUrl` points at. Skipped endpoints report `skipped-unsafe-method`.
+   */
+  allowWrites?: boolean;
+}
+
+/** True for `localhost`, any `127.0.0.0/8` address and `::1`. False for a malformed URL. */
+export function isLoopbackUrl(url: string): boolean {
+  let hostname: string;
+  try {
+    hostname = new URL(url).hostname;
+  } catch {
+    return false;
+  }
+  return hostname === 'localhost' || hostname === '[::1]' || /^127(\.\d{1,3}){3}$/.test(hostname);
 }
 
 /** Reads a response body up to `maxBytes`, aborting the underlying stream instead of buffering an unbounded body into memory. */
@@ -101,6 +127,9 @@ function buildTestBody(endpoint: Endpoint): { body: string | undefined; contentT
  */
 async function testEndpoint(endpoint: Endpoint, options: RunContractTestsOptions): Promise<EndpointTestResult> {
   const requestUrl = buildTestUrl(options.baseUrl, endpoint);
+  if (!options.allowWrites && !SAFE_METHODS.has(endpoint.method)) {
+    return { method: endpoint.method, path: endpoint.path, requestUrl, outcome: { kind: 'skipped-unsafe-method' } };
+  }
   const { body, contentType } = buildTestBody(endpoint);
 
   const headers = new Headers(options.headers);
@@ -152,11 +181,13 @@ export async function runContractTests(
   document: DocumentModel,
   options: RunContractTestsOptions,
 ): Promise<EndpointTestResult[]> {
-  if (options.restrictToServers) {
+  const restrict =
+    options.restrictToServers === true || (options.restrictToServers === undefined && !isLoopbackUrl(options.baseUrl));
+  if (restrict) {
     const allowed = buildAllowedOrigins(document.servers);
     if (!isOriginAllowed(options.baseUrl, allowed)) {
       throw new Error(
-        `baseUrl "${options.baseUrl}" is not one of the spec's declared servers (${document.servers.join(', ') || 'none declared'}) — pass restrictToServers: false to override.`,
+        `baseUrl "${options.baseUrl}" is not one of the spec's declared servers (${document.servers.join(', ') || 'none declared'}) — declare it in the spec's servers, or pass restrictToServers: false to override.`,
       );
     }
   }

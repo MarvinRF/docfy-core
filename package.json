@@ -15,6 +15,9 @@
   "files": [
     "dist"
   ],
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "author": "Marvin Rocha",
   "license": "MIT",
   "publishConfig": {

@@ -30,7 +30,7 @@ export type { LlmsTxtOptions } from './document-model/llms-txt.js';
 export { uniqueEndpoints } from './document-model/unique-endpoints.js';
 export { lintSpec } from './document-model/lint-spec.js';
 export type { SpecLintIssue, SpecLintRule } from './document-model/lint-spec.js';
-export { runContractTests } from './contract-test/run-contract-tests.js';
+export { isLoopbackUrl, runContractTests } from './contract-test/run-contract-tests.js';
 export type {
   EndpointTestOutcome,
   EndpointTestResult,
